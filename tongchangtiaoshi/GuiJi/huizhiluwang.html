@@ -1,0 +1,94 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <style>
+        html,
+        body,
+        #container {
+            width: 500px;
+            height: 500px;
+        }
+    </style>
+    <title>椭圆的绘制和编辑</title>
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+    <script
+        src="https://webapi.amap.com/maps?v=1.4.13&key=8e65c13f287b3ba28ab447fae8bb3680&plugin=AMap.MouseTool,AMap.PolyEditor"></script>
+    <script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
+</head>
+
+<body>
+    <div id="container"></div>
+    <div class="input-card" style="width: 200px">
+        <h4 style="margin-bottom: 10px; font-weight: 600">利用mouseTool绘制覆盖物</h4>
+        <button class="btn" onclick="drawPolyline()" style="margin-bottom: 5px">绘制线段</button>
+        <button class="btn" onclick="polyEditor1.open()" style="margin-bottom: 5px">开始编辑</button>
+        <button class="btn" onclick="polyEditor1.close()">结束编辑</button>
+        <button class="btn" onclick="outPathPoint()">输出路径</button>
+    </div>
+    <script type="text/javascript">
+        var map = new AMap.Map("container", {
+            center: [113.279725, 23.109815],
+            zoom: 18
+        });
+
+        var allline = [];
+        var polyEditor1 = null;
+        var mouseTool = new AMap.MouseTool(map)
+        var huizhiline;
+        function drawPolyline() {
+            
+            mouseTool.polyline({
+                strokeColor: "red",
+                strokeOpacity: 1,
+                strokeWeight: 1,
+                // 线样式还支持 'dashed'
+                strokeStyle: "solid",
+                // strokeStyle是dashed时有效
+                // strokeDasharray: [10, 5],
+            })
+        }
+        mouseTool.on('draw', function (object) {
+            // event.obj 为绘制出来的覆盖物对象
+            huizhiline = object.obj;
+            
+            polyEditor1 = new AMap.PolyEditor(map,huizhiline);
+            mouseTool.close(false);
+            polyEditor1.on('addnode', function (event) {
+                log.info('触发事件：addnode')
+            })
+
+            polyEditor1.on('adjust', function (event) {
+                log.info('触发事件：adjust')
+            })
+
+            polyEditor1.on('removenode', function (event) {
+                log.info('触发事件：removenode')
+            })
+
+            polyEditor1.on('end', function (event) {
+                log.info('触发事件： end')
+                // event.target 即为编辑后的折线对象
+            })
+        })
+        function outPathPoint() {
+            var pathdata = huizhiline.getPath();
+            var pathgather = "[";
+            console.log(pathdata);
+            for (var i = 0; i < pathdata.length; i++) {
+                var pointdata = "[" + pathdata[i].lng + "," + pathdata[i].lat + "]";
+                if (i != pathdata.length - 1)
+                    pathgather += pointdata + ","
+                else
+                    pathgather += pointdata + "]"
+            }
+            console.log(pathgather);
+        }
+
+    </script>
+</body>
+
+</html>

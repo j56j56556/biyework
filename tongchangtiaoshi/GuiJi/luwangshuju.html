@@ -1,0 +1,155 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <style>
+        html,
+        body,
+        #container {
+            width: 500px;
+            height: 500px;
+        }
+    </style>
+    <title>折线的绘制和编辑</title>
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+    <script
+        src="https://webapi.amap.com/maps?v=1.4.13&key=8e65c13f287b3ba28ab447fae8bb3680&plugin=AMap.PolyEditor"></script>
+    <script src="https://a.amap.com/jsapi_demos/static/demo-center/js/demoutils.js"></script>
+    <script src="luwangdata.js"></script>
+</head>
+
+<body>
+    <div id="container"></div>
+    <div class="input-card" style="width: 120px">
+        <button class="btn" onclick="polyEditor1.open()" style="margin-bottom: 5px">开始编辑</button>
+        <button class="btn" onclick="polyEditor1.close()">结束编辑</button>
+        <button class="btn" onclick="outPathPoint()">输出路径</button>
+    </div>
+    <script type="text/javascript">
+        var map = new AMap.Map("container", {
+            center: [116.395577, 39.892257],
+            zoom: 14
+        });
+
+        var path = [
+            [113.279703, 23.109815],
+            [113.279584, 23.109724],
+            [113.278993, 23.108099],
+            [113.279758, 23.107799],
+            [113.279363, 23.106405],
+            [113.27981, 23.106241],
+            [113.280054, 23.10608],
+            [113.280498, 23.10597],
+            [113.280914, 23.106053],
+            [113.281635, 23.105653],
+            [113.281704, 23.10557],
+            [113.281782, 23.105302],
+            [113.281799, 23.104906],
+            [113.281765, 23.104812],
+            [113.281678, 23.104676],
+            [113.281426, 23.104727],
+            [113.28079, 23.103005],
+            [113.281491, 23.102835],
+            [113.281531, 23.102913],
+            [113.282312, 23.102725],
+            [113.282274, 23.102567],
+            [113.282834, 23.102473],
+            [113.282928, 23.102813],
+            [113.28342, 23.102715],
+            [113.28375, 23.103884],
+            [113.28405, 23.10509],
+            [113.282266, 23.10546],
+            [113.282327, 23.105859],
+            [113.282587, 23.106675],
+            [113.282663, 23.106931],
+            [113.282542, 23.10729],
+            [113.281488, 23.107892],
+            [113.281653, 23.108333],
+            [113.281536, 23.108356],
+            [113.281634, 23.108604],
+            [113.281033, 23.108886],
+            [113.281141, 23.109269],
+            [113.280433, 23.109542],
+            [113.279725, 23.109815]
+        ];
+
+        var polyline = new AMap.Polyline({
+            path: path,
+            isOutline: true,
+            outlineColor: '#ffeeff',
+            borderWeight: 3,
+            strokeColor: "#3366FF",
+            strokeOpacity: 1,
+            strokeWeight: 2,
+            // 折线样式还支持 'dashed'
+            strokeStyle: "solid",
+            // strokeStyle是dashed时有效
+            strokeDasharray: [10, 5],
+            lineJoin: 'round',
+            lineCap: 'round',
+            zIndex: 50,
+        })
+
+        var polyline1 = new AMap.Polyline({
+            path: datapath,
+            isOutline: true,
+            outlineColor: 'red',
+            borderWeight: 1,
+            strokeColor: "red",
+            strokeOpacity: 1,
+            strokeWeight: 1,
+            // 折线样式还支持 'dashed'
+            strokeStyle: "solid",
+            // strokeStyle是dashed时有效
+            strokeDasharray: [10, 5],
+            lineJoin: 'round',
+            lineCap: 'round',
+            zIndex: 50,
+        })
+        polyline.setMap(map);
+        polyline1.setMap(map);
+        // 缩放地图到合适的视野级别
+        map.setFitView([polyline]);
+        map.setFitView([polyline1]);
+        console.log(polyline1);
+        function outPathPoint() {
+            var pathdata = polyline1.getPath();
+            var pathgather = "[";
+            console.log(pathdata);
+            for (var i = 0; i < pathdata.length; i++) {
+                var pointdata = "[" + pathdata[i].lng + "," + pathdata[i].lat + "]";
+                if (i != pathdata.length - 1)
+                    pathgather += pointdata + ","
+                else
+                    pathgather += pointdata + "]"
+            }
+            console.log(pathgather);
+        }
+
+        var polyEditor = new AMap.PolyEditor(map, polyline)
+
+        var polyEditor1 = new AMap.PolyEditor(map, polyline1)
+
+        polyEditor1.on('addnode', function (event) {
+            log.info('触发事件：addnode')
+        })
+
+        polyEditor1.on('adjust', function (event) {
+            log.info('触发事件：adjust')
+        })
+
+        polyEditor1.on('removenode', function (event) {
+            log.info('触发事件：removenode')
+        })
+
+        polyEditor1.on('end', function (event) {
+            log.info('触发事件： end')
+            // event.target 即为编辑后的折线对象
+        })
+    </script>
+</body>
+
+</html>
