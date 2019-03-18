@@ -1,0 +1,83 @@
+<html>
+<head>
+<style>
+body{
+width:max-width;
+text-align:center;
+}
+#div1{
+display:inline-block;
+}
+table{
+border:1px solid black;width:500px;
+}
+th{
+border:1px solid black;
+}
+td{
+border:1px solid black;text-align:center;
+}
+</style>
+<script src="jquery.min.js"></script>
+
+</head>
+<body>
+<div id="div1">
+<table id="table">
+<tr>
+	<th>手机号码</th>
+	<th>验证码</th>
+</tr>
+</table>
+</div>
+<div id="div2" style="text-align:left;position:fixed;z-index:99">
+<textarea id="text1" style="width:380px;height:500px;">
+</textarea>
+<button onclick="gettext()">
+	获取
+</button>
+</div>
+
+<script>
+var s1="342647|wetchat_isdiad8adasdi8d87s87342647|wetchat_isdiad8adasdi8d87s87"
+	
+	function gettabledata()
+{
+    $.ajax({
+        type: "POST",
+        url: "",
+        data: "",
+        success: function(msg){
+           var s1= $.parseJSON($.parseJSON(msg));
+            inittable(s1);
+        }
+    });
+}
+function gettext()
+{
+var s1=$("#text1").val();
+var allary=[];
+var ary=s1.split('\n');
+for(var i=0;i<ary.length;i++)
+{
+	var ary2=ary[i].split('|wechat_');
+	allary.push(ary2);
+}
+var table=document.getElementById('table');
+
+for(var i=0;i<allary.length;i++)
+{
+var tr=document.createElement('tr');
+var td=document.createElement('td');
+td.innerHTML=allary[i][0];
+tr.appendChild(td);
+var td=document.createElement('td');
+td.innerHTML="无验证码";
+tr.appendChild(td);
+table.appendChild(tr);
+}
+}
+</script>
+
+</body>
+</html>

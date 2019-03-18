@@ -1,0 +1,63 @@
+<html>
+<head>
+<style>
+
+</style>
+<script src="jquery.min.js"></script>
+</head>
+<body>
+<div id="div1">
+<textarea id="text1" style="width:400px;height:400px;">
+</textarea>
+<button onclick="getdata()">确定</button>
+</div>
+
+
+<script>
+var codeary=["A","B","C","D","E","F","G","H","I","J","K","L","M",
+"N","O","P","Q","R","S","T","U","V","W","X","Y","Z",
+"A1","B1","C1","D1","E1","F1","G1","H1","I1","J1","K1","L1","M1",
+"N1","O1","P1","Q1","R1","S1","T1","U1","V1","W1","X1","Y1","Z1"];
+var luwangdata=[];
+for(var k=0;k<codeary.length;k++)
+{	var lemp1=[];
+	for(var i=0;i<codeary.length;i++)
+	{
+		if(k==i)
+		lemp1[i]="0";
+		else
+		lemp1[i]="-1";
+	}
+	luwangdata.push(lemp1);
+}
+function indexcode(data1)
+{
+for(var i=0;i<codeary.length;i++)
+{
+	if(codeary[i]==data1)
+	{
+		return i;
+	}
+}
+}
+function getdata()
+{
+	var v1=$("#text1").val();
+	var ary=v1.split("\n");
+	for(var i=0;i<ary.length;i++)
+	{
+		if(ary[i]=="null"||ary[i]=="point")
+		continue;
+		var arychild=ary[i].split(">");
+		for(var j=0;j<arychild.length;j++)
+		{	var arych_child=arychild[j].split("_");
+			luwangdata[i][indexcode(arych_child[0])]=$.parseJSON(arych_child[1]);
+		}
+			
+	}
+	console.log(JSON.stringify(luwangdata));
+}
+</script>
+
+</body>
+</html>
